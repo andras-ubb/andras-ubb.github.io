@@ -71,8 +71,6 @@
   description: 'Nutritional Information of Fruits',
   transform: [
     {
-      // Convert wide format (vitamin_c, fiber, potassium columns)
-      // into a long format (Nutrient, Value) for grouped bars
       fold: ['vitamin_c', 'fiber', 'potassium'],
       as: ['Nutrient', 'Value']
     }
@@ -82,7 +80,7 @@
     x: { field: 'Fruit', type: 'nominal', axis: { title: 'Fruit' } },
     y: { field: 'Value', type: 'quantitative', axis: { title: 'Amount' } },
     color: { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
-    column: { field: 'Nutrient', type: 'nominal', spacing: 10 },
+    row: { field: 'Nutrient', type: 'nominal', spacing: 10 },
     tooltip: [
       { field: 'Fruit', type: 'nominal', title: 'Fruit' },
       { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
@@ -94,6 +92,7 @@
     axis: { labelFontSize: 12, titleFontSize: 13 }
   }
 };
+
 
 
         async function embedCharts() {
