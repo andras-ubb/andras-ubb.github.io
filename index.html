@@ -54,27 +54,26 @@
             mark: 'point',
             encoding: {
                 x: {field: 'Fruit', type: 'nominal'},
-                y: {field: 'RetailPrice', type: 'quantitative'},
+                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'},
                 color: {field: 'Form', type: 'nominal'}
             }
         };
 
         const chart2Spec = {
           $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-          description: 'A world map',
+          description: 'Nutritional Information of Fruits',
           data: { url: 'data2.csv' },
-          mark: {
-            type: 'geoshape',
-            fill: 'lightgray',
-            stroke: 'white'
-          },
+          mark: 'arc',
           encoding: {
+            theta: {field: 'vitamin_c', type: 'quantitative', stack: true},
+            color: {field: 'Fruit', type: 'nominal'},
             tooltip: [
-              {field: 'country', type: 'nominal', title: 'Country'},
-              {field: 'population', type: 'quantitative', title: 'Population'}
+              {field: 'Fruit', type: 'nominal', title: 'Fruit'},
+              {field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg'},
+              {field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g'},
+              {field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg'}
             ]
-          },
-          projection: {type: 'mercator'}
+          }
         }
 
         // Embed the charts
