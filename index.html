@@ -51,7 +51,7 @@
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
             data: { url: 'data1.csv' },
-            mark: 'point',
+            mark: 'bar',
             encoding: {
                 x: {field: 'Fruit', type: 'nominal'},
                 y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'},
@@ -97,3 +97,4 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </body>
 </html>
+
