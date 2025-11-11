@@ -51,11 +51,10 @@
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
             data: { url: 'data1.csv' },
-            mark: 'bar',
+            mark: 'point',
             encoding: {
                 x: {field: 'Fruit', type: 'nominal'},
-                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'},
-                color: {field: 'Form', type: 'nominal'}
+                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'}
             }
         };
 
@@ -88,7 +87,12 @@
 
             // Embed the charts
             vegaEmbed('#vega-chart-1', chart1Spec);
+            try {
             vegaEmbed('#vega-chart-2', chart2Spec);
+            } catch (error) {
+                console.error('Error embedding chart2:', error);
+                console.log('chart2Spec:', chart2Spec);
+        }
         }
 
         embedCharts();
@@ -97,4 +101,3 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </body>
 </html>
-
