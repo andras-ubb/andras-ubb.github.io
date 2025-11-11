@@ -1,0 +1,98 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cool Website with Vega Charts</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Awesome Website</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Charts</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content">
+            <h2>About This Website</h2>
+            <p>This is a placeholder for the website content. Add your amazing text here!</p>
+        </section>
+
+        <section class="charts">
+            <h2>Cool Vega Charts</h2>
+            <div id="vega-chart-1"></div>
+            <div id="vega-chart-2"></div>
+        </section>
+    </main>
+
+    <footer>>
+        <p>&copy; 2024 My Cool Website</p>
+    </footer>
+
+    <script>
+        // Function to fetch CSV data (replace with a real implementation)
+        async function fetchCSV(url) {
+            const response = await fetch(url);
+            const text = await response.text();
+            return d3.csvParse(text);
+        }
+
+        // Vega-Lite specifications
+        const chart1Spec = {
+            $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+            description: 'Retail Price of Fruits.',
+            data: { url: 'data1.csv' },
+            mark: 'bar',
+            encoding: {
+                x: {field: 'Fruit', type: 'nominal'},
+                y: {field: 'RetailPrice', type: 'quantitative'}
+            }
+        };
+
+        const chart2Spec = {
+          $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+          description: 'A world map',
+          data: { url: 'data2.csv' },
+          mark: {
+            type: 'geoshape',
+            fill: 'lightgray',
+            stroke: 'white'
+          },
+          encoding: {
+            tooltip: [
+              {field: 'country', type: 'nominal', title: 'Country'},
+              {field: 'population', type: 'quantitative', title: 'Population'}
+            ]
+          },
+          projection: {type: 'mercator'}
+        }
+        // Embed the charts
+        async function embedCharts() {
+            // Load data
+            const data1 = await fetchCSV('data1.csv');
+            const data2 = await fetchCSV('data2.csv');
+
+            // Update chart specifications with data
+            chart1Spec.data.values = data1;
+            chart2Spec.data.values = data2;
+
+            // Embed the charts
+            vegaEmbed('#vega-chart-1', chart1Spec);
+            vegaEmbed('#vega-chart-2', chart2Spec);
+        }
+
+        embedCharts();
+
+    </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</body>
+</html>
