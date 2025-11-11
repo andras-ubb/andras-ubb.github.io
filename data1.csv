@@ -1,64 +1,64 @@
-Fruit,Form,RetailPrice
-Apples,Fresh,1.8541
-Apples,applesauce Canned,1.1705
-Apples,ready-to-drink Juice,0.8699
-Apples,frozen concentrate Juice,0.6086
-Apricots,Fresh,3.6162
-Apricots,packed in juice Canned,1.8645
-Apricots,packed in syrup or water Canned,2.2362
-Apricots,Dried,7.6611
-Bananas,Fresh,0.5971
-Berries,mixed Frozen,4.2673
-Blackberries,Fresh,6.7483
-Blackberries,Frozen,4.8277
-Blueberries,Fresh,4.1575
-Blueberries,Frozen,3.821
-Cantaloupe,Fresh,0.7523
-Cherries,Fresh,4.6632
-Cherries,packed in syrup or water Canned,5.2418
-Clementines,Fresh,1.5811
-Cranberries,Dried,5.0828
-Dates,Dried,5.7499
-Figs,Dried,7.3233
-Fruit cocktail,packed in juice Canned,2.394
-Fruit cocktail,packed in syrup or water Canned,2.0996
-Grapefruit,Fresh,1.4444
-Grapefruit,ready-to-drink Juice,1.1935
-Grapes,Fresh,2.0363
-Grapes,(raisins) Dried,3.9936
-Grapes,ready-to-drink Juice,1.0509
-Grapes,frozen concentrate Juice,0.7524
-Honeydew,Fresh,1.1589
-Kiwi,Fresh,2.6064
-Mangoes,Fresh,1.4698
-Mangoes,Dried,10.3035
-Nectarines,Fresh,2.3721
-Oranges,Fresh,1.4624
-Oranges,ready-to-drink Juice,1.0572
-Oranges,frozen concentrate Juice,0.7338
-Papaya,Fresh,1.3375
-Papaya,Dried,7.4854
-Peaches,Fresh,2.1785
-Peaches,packed in juice Canned,2.2503
-Peaches,packed in syrup or water Canned,2.0102
-Peaches,Frozen,3.6058
-Pears,Fresh,1.8472
-Pears,packed in juice Canned,2.14
-Pears,packed in syrup or water Canned,2.092
-Pineapple,Fresh,0.617
-Pineapple,packed in juice Canned,1.6509
-Pineapple,packed in syrup or water Canned,1.7771
-Pineapple,Dried,7.0133
-Pineapple,ready-to-drink Juice,1.2243
-Pineapple,frozen concentrate Juice,0.7256
-Plum,Fresh,2.5259
-Plum,(prunes) Dried,6.3293
-Plum,(prune),ready-to-drink Juice,1.6988
-Pomegranate,Fresh,2.4672
-Pomegranate,ready-to-drink Juice,3.2788
-Raspberries,Fresh,7.7338
-Raspberries,Frozen,6.159
-Strawberries,Fresh,2.9682
-Strawberries,Frozen,3.3421
-Watermelon,Fresh,0.382
+Fruit,RetailPrice
+Apples,1.8541
+Apples,1.1705
+Apples,0.8699
+Apples,0.6086
+Apricots,3.6162
+Apricots,1.8645
+Apricots,2.2362
+Apricots,7.6611
+Bananas,0.5971
+Berries,4.2673
+Blackberries,6.7483
+Blackberries,4.8277
+Blueberries,4.1575
+Blueberries,3.821
+Cantaloupe,0.7523
+Cherries,4.6632
+Cherries,5.2418
+Clementines,1.5811
+Cranberries,5.0828
+Dates,5.7499
+Figs,7.3233
+Fruit cocktail,2.394
+Fruit cocktail,2.0996
+Grapefruit,1.4444
+Grapefruit,1.1935
+Grapes,2.0363
+Grapes,3.9936
+Grapes,1.0509
+Grapes,0.7524
+Honeydew,1.1589
+Kiwi,2.6064
+Mangoes,1.4698
+Mangoes,10.3035
+Nectarines,2.3721
+Oranges,1.4624
+Oranges,1.0572
+Oranges,0.7338
+Papaya,1.3375
+Papaya,7.4854
+Peaches,2.1785
+Peaches,2.2503
+Peaches,2.0102
+Peaches,3.6058
+Pears,1.8472
+Pears,2.14
+Pears,2.092
+Pineapple,0.617
+Pineapple,1.6509
+Pineapple,1.7771
+Pineapple,7.0133
+Pineapple,1.2243
+Pineapple,0.7256
+Plum,2.5259
+Plum,6.3293
+Plum,1.6988
+Pomegranate,2.4672
+Pomegranate,3.2788
+Raspberries,7.7338
+Raspberries,6.159
+Strawberries,2.9682
+Strawberries,3.3421
+Watermelon,0.382
 
