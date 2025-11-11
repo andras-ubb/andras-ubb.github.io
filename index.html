@@ -3,7 +3,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cool Website with Vega Charts</title>
     <link rel="stylesheet" href="style.css">
@@ -30,10 +29,18 @@
 
         <section class="charts">
             <h2>Cool Vega Charts</h2>
-            <div class="chart-container">
+            <section class="chart-section">
+                <h3>Fruit Retail Prices</h3>
+                <p>This chart shows the retail prices of different fruits.</p>
               <div id="vega-chart-1"></div>
-              <div id="vega-chart-2"></div>
-            </div>
+            </section>
+
+            <section class="chart-section">
+                <h3>Fruit Nutritional Information (Vitamin C)</h3>
+                <p>This chart shows the Vitamin C content of different fruits.</p>
+                <div id="vega-chart-2"></div>
+        </section>
+
         </section>
     </main>
 
@@ -57,8 +64,8 @@
             data: { url: 'data1.csv' },
             mark: 'point',
             encoding: {
-                x: { field: 'Fruit', type: 'nominal' },
-                y: { field: 'RetailPrice', type: 'quantitative', format: '$0.2f' }
+                x: {field: 'Fruit', type: 'nominal'},
+                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'}
             }
         };
 
@@ -68,14 +75,13 @@
           data: { url: 'data2.csv' },
           mark: 'arc',
           encoding: {
-            theta: { field: 'vitamin_c', type: 'quantitative', stack: true },
-            color: { field: 'Fruit', type: 'nominal' },
+            theta: {field: 'vitamin_c', type: 'quantitative', stack: true},
+            color: {field: 'Fruit', type: 'nominal'},
             tooltip: [
-              { field: 'Fruit', type: 'nominal', title: 'Fruit' },
-              { field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg' },
-              { field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g' },
-              { field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg' }
-            ]
+              {field: 'Fruit', type: 'nominal', title: 'Fruit'},
+              {field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg'},
+              {field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g'},
+              {field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg'}
           }
         };
 
