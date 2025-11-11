@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cool Website with Vega Charts</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Load libraries first -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <header>
@@ -29,17 +31,16 @@
 
         <section class="charts">
             <h2>Cool Vega Charts</h2>
+
             <section class="chart-section">
                 <h3>Fruit Retail Prices</h3>
-                <p>This chart shows the retail prices of different fruits.</p>
-              <div id="vega-chart-1"></div>
+                <div id="vega-chart-1"></div>
             </section>
 
             <section class="chart-section">
                 <h3>Fruit Nutritional Information (Vitamin C)</h3>
-                <p>This chart shows the Vitamin C content of different fruits.</p>
                 <div id="vega-chart-2"></div>
-        </section>
+            </section>
 
         </section>
     </main>
@@ -49,68 +50,54 @@
     </footer>
 
     <script>
-        // Function to fetch CSV data (replace with a real implementation)
         async function fetchCSV(url) {
             const response = await fetch(url);
             const text = await response.text();
-            const data = d3.csvParse(text);
-            return data;
+            return d3.csvParse(text);
         }
 
-        // Vega-Lite specifications
         const chart1Spec = {
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
-            data: { url: 'data1.csv' },
             mark: 'point',
             encoding: {
-                x: {field: 'Fruit', type: 'nominal'},
-                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'}
+                x: { field: 'Fruit', type: 'nominal' },
+                y: { field: 'RetailPrice', type: 'quantitative', format: '$0.2f' }
             }
         };
 
         const chart2Spec = {
-          $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-          description: 'Nutritional Information of Fruits',
-          data: { url: 'data2.csv' },
-          mark: 'arc',
-          encoding: {
-            theta: {field: 'vitamin_c', type: 'quantitative', stack: true},
-            color: {field: 'Fruit', type: 'nominal'},
-            tooltip: [
-              {field: 'Fruit', type: 'nominal', title: 'Fruit'},
-              {field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg'},
-              {field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g'},
-              {field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg'}
-          }
+            $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+            description: 'Nutritional Information of Fruits',
+            mark: 'arc',
+            encoding: {
+                theta: { field: 'vitamin_c', type: 'quantitative', stack: true },
+                color: { field: 'Fruit', type: 'nominal' },
+                tooltip: [
+                    { field: 'Fruit', type: 'nominal', title: 'Fruit' },
+                    { field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C (mg)' },
+                    { field: 'fiber', type: 'quantitative', title: 'Fiber (g)' },
+                    { field: 'potassium', type: 'quantitative', title: 'Potassium (mg)' }
+                ]
+            }
         };
 
-        // Embed the charts
         async function embedCharts() {
-            // Load data
-            const data1 = await fetchCSV('data1.csv');
-            const data2 = await fetchCSV('data2.csv');
-
-            // Update chart specifications with data
-            chart1Spec.data.values = data1;
-            chart2Spec.data.values = data2;
-
-            // Embed the charts
             try {
-                vegaEmbed('#vega-chart-1', chart1Spec);
-            } catch (error) {
-                console.error('Error embedding chart1:', error);
-            }
-            try {
-                vegaEmbed('#vega-chart-2', chart2Spec);
-            } catch (error) {
-                console.error('Error embedding chart2:', error);
+                const data1 = await fetchCSV('data1.csv');
+                const data2 = await fetchCSV('data2.csv');
+
+                chart1Spec.data = { values: data1 };
+                chart2Spec.data = { values: data2 };
+
+                await vegaEmbed('#vega-chart-1', chart1Spec);
+                await vegaEmbed('#vega-chart-2', chart2Spec);
+            } catch (err) {
+                console.error('Error embedding charts:', err);
             }
         }
 
         embedCharts();
-
     </script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
 </body>
 </html>
