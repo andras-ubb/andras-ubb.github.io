@@ -59,7 +59,7 @@
         const chart1Spec = {
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
-            mark: 'point',
+            mark: 'bar',
             encoding: {
                 x: { field: 'Fruit', type: 'nominal' },
                 y: { field: 'RetailPrice', type: 'quantitative', format: '$0.2f' }
@@ -67,20 +67,34 @@
         };
 
         const chart2Spec = {
-            $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-            description: 'Nutritional Information of Fruits',
-            mark: 'arc',
-            encoding: {
-                theta: { field: 'vitamin_c', type: 'quantitative', stack: true },
-                color: { field: 'Fruit', type: 'nominal' },
-                tooltip: [
-                    { field: 'Fruit', type: 'nominal', title: 'Fruit' },
-                    { field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C (mg)' },
-                    { field: 'fiber', type: 'quantitative', title: 'Fiber (g)' },
-                    { field: 'potassium', type: 'quantitative', title: 'Potassium (mg)' }
-                ]
-            }
-        };
+  $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+  description: 'Nutritional Information of Fruits',
+  transform: [
+    {
+      // Convert wide format (vitamin_c, fiber, potassium columns)
+      // into a long format (Nutrient, Value) for grouped bars
+      fold: ['vitamin_c', 'fiber', 'potassium'],
+      as: ['Nutrient', 'Value']
+    }
+  ],
+  mark: 'bar',
+  encoding: {
+    x: { field: 'Fruit', type: 'nominal', axis: { title: 'Fruit' } },
+    y: { field: 'Value', type: 'quantitative', axis: { title: 'Amount' } },
+    color: { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
+    column: { field: 'Nutrient', type: 'nominal', spacing: 10 },
+    tooltip: [
+      { field: 'Fruit', type: 'nominal', title: 'Fruit' },
+      { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
+      { field: 'Value', type: 'quantitative', title: 'Value' }
+    ]
+  },
+  config: {
+    view: { stroke: 'transparent' },
+    axis: { labelFontSize: 12, titleFontSize: 13 }
+  }
+};
+
 
         async function embedCharts() {
             try {
