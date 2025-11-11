@@ -34,7 +34,7 @@
         </section>
     </main>
 
-    <footer>>
+    <footer>
         <p>&copy; 2024 My Cool Website</p>
     </footer>
 
@@ -51,10 +51,11 @@
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
             data: { url: 'data1.csv' },
-            mark: 'bar',
+            mark: 'point',
             encoding: {
                 x: {field: 'Fruit', type: 'nominal'},
-                y: {field: 'RetailPrice', type: 'quantitative'}
+                y: {field: 'RetailPrice', type: 'quantitative'},
+                color: {field: 'Form', type: 'nominal'}
             }
         };
 
@@ -75,6 +76,7 @@
           },
           projection: {type: 'mercator'}
         }
+
         // Embed the charts
         async function embedCharts() {
             // Load data
