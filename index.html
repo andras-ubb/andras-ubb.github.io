@@ -60,12 +60,18 @@
 
         const chart2Spec = {
           $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-          description: 'A simple bar chart',
-          data: { values: [{ category: 'A', value: 10 }] },
-          mark: 'bar',
+          description: 'Nutritional Information of Fruits',
+          data: { url: 'data2.csv' },
+          mark: 'arc',
           encoding: {
-            x: { field: 'category', type: 'nominal' },
-            y: { field: 'value', type: 'quantitative' }
+            theta: {field: 'vitamin_c', type: 'quantitative', stack: true},
+            color: {field: 'Fruit', type: 'nominal'},
+            tooltip: [
+              {field: 'Fruit', type: 'nominal', title: 'Fruit'},
+              {field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg'},
+              {field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g'},
+              {field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg'}
+            ]
           }
         };
 
@@ -76,11 +82,19 @@
             const data2 = await fetchCSV('data2.csv');
 
             console.log('data2:', data2);
-                console.log('chart2Spec:', chart2Spec);
-
             // Update chart specifications with data
             chart1Spec.data.values = data1;
             chart2Spec.data.values = data2;
+
+            console.log('chart2Spec:', chart2Spec);
+
+            // Debugging - check data values
+            if (data2 && data2.length > 0) {
+                console.log('First fruit:', data2[0.Fruit);
+                console.log('Vitamin C:', data2[0].vitamin_c);
+                console.log('Fiber:', data2[0].fiber);
+                console.log('Potassium:', data2[0].potassium);
+            }
 
             // Embed the charts
             vegaEmbed('#vega-chart-1', chart1Spec);
@@ -88,7 +102,7 @@
                 vegaEmbed('#vega-chart-2', chart2Spec);
             } catch (error) {
                 console.error('Error embedding chart2:', error);
-        }
+            }
         }
 
         embedCharts();
