@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cool Website with Vega Charts</title>
     <link rel="stylesheet" href="style.css">
@@ -29,8 +30,10 @@
 
         <section class="charts">
             <h2>Cool Vega Charts</h2>
-            <div id="vega-chart-1"></div>
-            <div id="vega-chart-2"></div>
+            <div class="chart-container">
+              <div id="vega-chart-1"></div>
+              <div id="vega-chart-2"></div>
+            </div>
         </section>
     </main>
 
@@ -43,7 +46,8 @@
         async function fetchCSV(url) {
             const response = await fetch(url);
             const text = await response.text();
-            return d3.csvParse(text);
+            const data = d3.csvParse(text);
+            return data;
         }
 
         // Vega-Lite specifications
@@ -51,10 +55,10 @@
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             description: 'Retail Price of Fruits.',
             data: { url: 'data1.csv' },
-            mark: 'bar',
+            mark: 'point',
             encoding: {
-                x: {field: 'Fruit', type: 'nominal'},
-                y: {field: 'RetailPrice', type: 'quantitative', format: '$0.2f'}
+                x: { field: 'Fruit', type: 'nominal' },
+                y: { field: 'RetailPrice', type: 'quantitative', format: '$0.2f' }
             }
         };
 
@@ -64,13 +68,13 @@
           data: { url: 'data2.csv' },
           mark: 'arc',
           encoding: {
-            theta: {field: 'vitamin_c', type: 'quantitative', stack: true},
-            color: {field: 'Fruit', type: 'nominal'},
+            theta: { field: 'vitamin_c', type: 'quantitative', stack: true },
+            color: { field: 'Fruit', type: 'nominal' },
             tooltip: [
-              {field: 'Fruit', type: 'nominal', title: 'Fruit'},
-              {field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg'},
-              {field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g'},
-              {field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg'}
+              { field: 'Fruit', type: 'nominal', title: 'Fruit' },
+              { field: 'vitamin_c', type: 'quantitative', title: 'Vitamin C', format: '0.0f mg' },
+              { field: 'fiber', type: 'quantitative', title: 'Fiber', format: '0.1f g' },
+              { field: 'potassium', type: 'quantitative', title: 'Potassium', format: '0.0f mg' }
             ]
           }
         };
@@ -81,23 +85,16 @@
             const data1 = await fetchCSV('data1.csv');
             const data2 = await fetchCSV('data2.csv');
 
-            console.log('data2:', data2);
             // Update chart specifications with data
             chart1Spec.data.values = data1;
             chart2Spec.data.values = data2;
 
-            console.log('chart2Spec:', chart2Spec);
-
-            // Debugging - check data values
-            if (data2 && data2.length > 0) {
-                console.log('First fruit:', data2[0.Fruit);
-                console.log('Vitamin C:', data2[0].vitamin_c);
-                console.log('Fiber:', data2[0].fiber);
-                console.log('Potassium:', data2[0].potassium);
-            }
-
             // Embed the charts
-            vegaEmbed('#vega-chart-1', chart1Spec);
+            try {
+                vegaEmbed('#vega-chart-1', chart1Spec);
+            } catch (error) {
+                console.error('Error embedding chart1:', error);
+            }
             try {
                 vegaEmbed('#vega-chart-2', chart2Spec);
             } catch (error) {
