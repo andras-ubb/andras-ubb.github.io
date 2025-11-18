@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
+
 <body>
     <header>
         <h1>Welcome to My Awesome Website</h1>
@@ -50,67 +51,69 @@
     </footer>
 
     <script>
-        async function fetchCSV(url) {
-            const response = await fetch(url);
-            const text = await response.text();
-            return d3.csvParse(text);
-        }
+        document.addEventListener('DOMContentLoaded', () => {
 
-        const chart1Spec = {
-            $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-            description: 'Retail Price of Fruits.',
-            mark: 'bar',
-            encoding: {
-                x: { field: 'Fruit', type: 'nominal' },
-                y: { field: 'RetailPrice', type: 'quantitative', format: '$0.2f' }
+            async function fetchCSV(url) {
+                const response = await fetch(url);
+                const text = await response.text();
+                return d3.csvParse(text);
             }
-        };
 
-        const chart2Spec = {
-  $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-  description: 'Nutritional Information of Fruits',
-  transform: [
-    {
-      fold: ['vitamin_c', 'fiber', 'potassium'],
-      as: ['Nutrient', 'Value']
-    }
-  ],
-  mark: 'bar',
-  encoding: {
-    x: { field: 'Fruit', type: 'nominal', axis: { title: 'Fruit' } },
-    y: { field: 'Value', type: 'quantitative', axis: { title: 'Amount' } },
-    color: { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
-    row: { field: 'Nutrient', type: 'nominal', spacing: 10 },
-    tooltip: [
-      { field: 'Fruit', type: 'nominal', title: 'Fruit' },
-      { field: 'Nutrient', type: 'nominal', title: 'Nutrient' },
-      { field: 'Value', type: 'quantitative', title: 'Value' }
-    ]
-  },
-  config: {
-    view: { stroke: 'transparent' },
-    axis: { labelFontSize: 12, titleFontSize: 13 }
-  }
-};
+            const chart1Spec = {
+                $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+                description: "Retail Price of Fruits",
+                mark: "bar",
+                encoding: {
+                    x: { field: "Fruit", type: "nominal" },
+                    y: { field: "RetailPrice", type: "quantitative", format: "$0.2f" }
+                }
+            };
 
+            const chart2Spec = {
+                $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+                description: "Nutritional Information of Fruits",
+                transform: [
+                    {
+                        fold: ["vitamin_c", "fiber", "potassium"],
+                        as: ["Nutrient", "Value"]
+                    }
+                ],
+                mark: "bar",
+                encoding: {
+                    x: { field: "Fruit", type: "nominal", axis: { title: "Fruit" } },
+                    y: { field: "Value", type: "quantitative", axis: { title: "Amount" } },
+                    color: { field: "Nutrient", type: "nominal", title: "Nutrient" },
+                    row: { field: "Nutrient", type: "nominal", spacing: 10 },
+                    tooltip: [
+                        { field: "Fruit", type: "nominal", title: "Fruit" },
+                        { field: "Nutrient", type: "nominal", title: "Nutrient" },
+                        { field: "Value", type: "quantitative", title: "Value" }
+                    ]
+                },
+                config: {
+                    view: { stroke: "transparent" },
+                    axis: { labelFontSize: 12, titleFontSize: 13 }
+                }
+            };
 
+            async function embedCharts() {
+                try {
+                    const data1 = await fetchCSV("data1.csv");
+                    const data2 = await fetchCSV("data2.csv");
 
-        async function embedCharts() {
-            try {
-                const data1 = await fetchCSV('data1.csv');
-                const data2 = await fetchCSV('data2.csv');
+                    chart1Spec.data = { values: data1 };
+                    chart2Spec.data = { values: data2 };
 
-                chart1Spec.data = { values: data1 };
-                chart2Spec.data = { values: data2 };
-
-                await vegaEmbed('#vega-chart-1', chart1Spec);
-                await vegaEmbed('#vega-chart-2', chart2Spec);
-            } catch (err) {
-                console.error('Error embedding charts:', err);
+                    await vegaEmbed("#vega-chart-1", chart1Spec);
+                    await vegaEmbed("#vega-chart-2", chart2Spec);
+                } catch (err) {
+                    console.error("Error embedding charts:", err);
+                }
             }
-        }
 
-        embedCharts();
+            embedCharts();
+
+        });
     </script>
 </body>
 </html>
