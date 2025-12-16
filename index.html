@@ -115,5 +115,43 @@
 
         });
     </script>
+
+      <!-- 👇 THIS IS WHERE THE CHART GOES -->
+  <div id="chart1"></div>
+
+  <!-- 👇 YOUR SCRIPT CAN GO AFTER -->
+  <script>
+    async function loadFruitPrices() {
+      const url =
+        "https://agridata.ec.europa.eu/api/fruitAndVegetable/pricesSupplyChain/prices" +
+        "?productCode=APL&memberState=RO&stage=RETAIL";
+
+      const response = await fetch(url);
+      const rawData = await response.json();
+
+      return rawData.map(item => ({
+        Fruit: "Apple",
+        RetailPrice: item.price,
+        Date: item.date
+      }));
+    }
+
+    const chart1Spec = {
+      $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+      data: { name: "table" },
+      mark: "bar",
+      encoding: {
+        x: { field: "Date", type: "temporal" },
+        y: { field: "RetailPrice", type: "quantitative" }
+      }
+    };
+
+    (async () => {
+      const data = await loadFruitPrices();
+      vegaEmbed("#chart1", chart1Spec, {
+        datasets: { table: data }
+      });
+    })();
+  </script>
 </body>
 </html>
