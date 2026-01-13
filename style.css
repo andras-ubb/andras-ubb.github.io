@@ -1,20 +1,55 @@
+/* Extreme Music-Themed CSS */
 body {
-    font-family: sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    color: #e0e0e0;
+    overflow-x: hidden;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 header {
-    background-color: #333;
+    background: linear-gradient(45deg, #692945, #472f68, #31548b);
     color: #fff;
-    padding: 1em 0;
+    padding: 2em 0;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 header h1 {
     margin: 0;
+    font-size: 3em;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 nav {
@@ -26,57 +61,149 @@ nav a {
     text-decoration: none;
     padding: 0.5em 1em;
     margin: 0 0.5em;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
-    transition: background-color 0.3s ease;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -0%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+nav a:hover::before {
+    left: 100%;
 }
 
 nav a:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
 }
 
 main {
     padding: 2em;
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
+    position: relative;
 }
 
 .content {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.05);
     padding: 2em;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2em;
+    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .charts {
-    margin-top: 2em;
-    background-color: #fff;
+    margin-top: 4em;
+    background: rgba(255, 255, 255, 0.05);
     padding: 2em;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeInUp 1.5s ease-out;
 }
 
-.chart-container {
-    display: flex;
-    flex-direction: row; /* Display charts in a row */
-    justify-content: space-around; /* Distribute space evenly */
-    align-items: center; /* Vertically align items */
-    width: 100%;
+.chart-section {
+    margin-bottom: 2em;
+    padding: 2em 0;
+    text-align: center;
+    min-height: 500px;
 }
 
-#vega-chart-1, #vega-chart-2 {
-    height: 300px; /* Adjust as needed */
-    width: 45%; /* Adjust as needed - leave some space between charts */
-    background-color: #f0f0f0; /* Add a light background */
-    border: 1px solid #ccc;
+.chart-section h3 {
+    color: #6e46db;
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px rgba(118, 49, 230, 0.5);
+}
+
+#genre-select {
+    background: rgba(0, 0, 0, 0.2);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 5px;
+    padding: 5px;
+}
+
+#genre-controls label {
+    color: #ff006e;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+#music-chart-1, #music-chart-2 {
+    height: 400px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 footer {
     text-align: center;
     padding: 1em 0;
-    background-color: #333;
+    background: linear-gradient(45deg, #8338ec, #3a86ff);
     color: #fff;
     margin-top: 2em;
+    position: relative;
+}
+
+footer::after {
+    content: '♪ ♫ ♪';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5em;
+    opacity: 0.5;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+    nav a {
+        display: block;
+        margin: 0.5em 0;
+    }
+    main {
+        padding: 1em;
+    }
+    .content, .charts {
+        padding: 1em;
+    }
 }
 
