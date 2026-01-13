@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cool Website with Vega Charts</title>
+    <title>Music Data Charts</title>
     <link rel="stylesheet" href="style.css">
 
     <!-- Load libraries first -->
@@ -15,143 +15,249 @@
 
 <body>
     <header>
-        <h1>Welcome to My Awesome Website</h1>
+        <h1>Welcome to Music Data Charts</h1>
         <nav>
             <a href="#">Home</a>
-            <a href="#">About</a>
             <a href="#">Charts</a>
-            <a href="#">Contact</a>
+            <a href="#">Genres</a>
+            <a href="#">Artists</a>
         </nav>
     </header>
 
     <main>
         <section class="content">
             <h2>About This Website</h2>
-            <p>This is a placeholder for the website content. Add your amazing text here!</p>
+            <p>This site is dedicated to visualizing music data through beautiful charts. Explore trends in genres, artists, and more!</p>
         </section>
 
         <section class="charts">
-            <h2>Cool Vega Charts</h2>
+            <h2>Music Data Charts</h2>
 
             <section class="chart-section">
-                <h3>Fruit Retail Prices</h3>
-                <div id="vega-chart-1"></div>
+                <h3>Genre Popularity Over The Years (1970-2020)</h3>
+                <div id="genre-controls" style="margin-bottom: 10px;">
+                    <label for="genre-select">Select Genres:</label>
+                </div>
+                <div id="music-chart-1"></div>
+
             </section>
 
             <section class="chart-section">
-                <h3>Fruit Nutritional Information (Vitamin C)</h3>
-                <div id="vega-chart-2"></div>
+                <h3>A művész követőinek kihatása a zenéjük sikerére</h3>
+                <div> 5000 random rekord alapján </div>
+                <div id="music-chart-2"></div>
+            </section>
+
+            <section class="chart-section">
+                <h3>Explore Song Characteristics Distribution</h3>
+                <div id="music-chart-3"></div>
+                <div>
+                    <strong>Danceability</strong> - A szám táncolhatóságának mértéke<br>
+                    <strong>Energy</strong> - Az intenzitás percepciója<br>
+                    <strong>Tempo</strong> - Ütem per perc<br>
+                    <strong>Loudness</strong> - A szám általános hangerőssége decibelben<br>
+                    <strong>Speechiness</strong> - Beszélt szavak jelenléte a számban<br>
+                    <strong>Instrumentalness</strong> - Előrejelzi, hogy a számban nincs vokál
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h3>Top 10 Artists per Genre by Followers</h3>
+                <div id="genre-select-4" style="margin-bottom: 10px;">
+                    <label for="genre-select-single">Select Genre:</label>
+                    <select id="genre-select-single"></select>
+                </div>
+                <div id="music-chart-4"></div>
             </section>
 
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 My Cool Website</p>
+        <p>&copy; 2024 Music Data Charts</p>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            async function fetchCSV(url) {
-                const response = await fetch(url);
-                const text = await response.text();
-                return d3.csvParse(text);
-            }
-
-            const chart1Spec = {
-                $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-                description: "Retail Price of Fruits",
-                mark: "bar",
-                encoding: {
-                    x: { field: "Fruit", type: "nominal" },
-                    y: { field: "RetailPrice", type: "quantitative", format: "$0.2f" }
-                }
-            };
-
-            const chart2Spec = {
-                $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-                description: "Nutritional Information of Fruits",
-                transform: [
-                    {
-                        fold: ["vitamin_c", "fiber", "potassium"],
-                        as: ["Nutrient", "Value"]
-                    }
-                ],
-                mark: "bar",
-                encoding: {
-                    x: { field: "Fruit", type: "nominal", axis: { title: "Fruit" } },
-                    y: { field: "Value", type: "quantitative", axis: { title: "Amount" } },
-                    color: { field: "Nutrient", type: "nominal", title: "Nutrient" },
-                    row: { field: "Nutrient", type: "nominal", spacing: 10 },
-                    tooltip: [
-                        { field: "Fruit", type: "nominal", title: "Fruit" },
-                        { field: "Nutrient", type: "nominal", title: "Nutrient" },
-                        { field: "Value", type: "quantitative", title: "Value" }
-                    ]
-                },
-                config: {
-                    view: { stroke: "transparent" },
-                    axis: { labelFontSize: 12, titleFontSize: 13 }
-                }
-            };
-
-            async function embedCharts() {
-                try {
-                    const data1 = await fetchCSV("data1.csv");
-                    const data2 = await fetchCSV("data2.csv");
-
-                    chart1Spec.data = { values: data1 };
-                    chart2Spec.data = { values: data2 };
-
-                    await vegaEmbed("#vega-chart-1", chart1Spec);
-                    await vegaEmbed("#vega-chart-2", chart2Spec);
-                } catch (err) {
-                    console.error("Error embedding charts:", err);
-                }
-            }
-
-            embedCharts();
-
-        });
-    </script>
-
-      <!-- 👇 THIS IS WHERE THE CHART GOES -->
-  <div id="chart1"></div>
-
-  <!-- 👇 YOUR SCRIPT CAN GO AFTER -->
-  <script>
-    async function loadFruitPrices() {
-      const url =
-        "https://agridata.ec.europa.eu/api/fruitAndVegetable/pricesSupplyChain/prices" +
-        "?productCode=APL&memberState=RO&stage=RETAIL";
-
-      const response = await fetch(url);
-      const rawData = await response.json();
-
-      return rawData.map(item => ({
-        Fruit: "Apple",
-        RetailPrice: item.price,
-        Date: item.date
-      }));
+const spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 875,
+    "height": 350,
+    "data": {"name": "source", "values": []},
+    "transform": [
+        {
+            "aggregate": [
+                {"op": "mean", "field": "popularity", "as": "mean_popularity"}
+            ],
+            "groupby": ["year", "genre"]
+        }
+    ],
+    "mark": "line",
+    "encoding": {
+        "x": {"field": "year", "type": "quantitative", "scale": {"domain": [1970, 2020]}},
+        "y": {"field": "mean_popularity", "type": "quantitative"},
+        "color": {"field": "genre", "type": "nominal"}
     }
+};
 
-    const chart1Spec = {
-      $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-      data: { name: "table" },
-      mark: "bar",
-      encoding: {
-        x: { field: "Date", type: "temporal" },
-        y: { field: "RetailPrice", type: "quantitative" }
-      }
-    };
+const spec2 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 875,
+    "height": 350,
+    "data": {"name": "source2", "values": []},
+    "mark": {"type": "point", "opacity": 0.5},
+    "encoding": {
+        "x": {"field": "total_artist_followers", "type": "quantitative", "scale": {"type": "log"}},
+        "y": {"field": "popularity", "type": "quantitative"},
+        "color": {"field": "genre", "type": "nominal"},
+        "tooltip": ["name", "artists", "popularity", "total_artist_followers"]
+    }
+};
 
-    (async () => {
-      const data = await loadFruitPrices();
-      vegaEmbed("#chart1", chart1Spec, {
-        datasets: { table: data }
-      });
-    })();
-  </script>
+const spec3 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {"name": "source3", "values": []},
+    "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
+    "columns": 3,
+    "spec": {
+        "width": 250,
+        "height": 300,
+        "mark": "boxplot",
+        "encoding": {
+            "x": {"field": "genre", "type": "nominal"},
+            "y": {"field": {"repeat": "repeat"}, "type": "quantitative"},
+            "color": {"field": "genre", "type": "nominal"}
+        }
+    }
+};
+
+const spec4 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 725,
+    "height": 350,
+    "data": {"name": "source4", "values": []},
+    "mark": "bar",
+    "encoding": {
+        "x": {"field": "followers", "type": "quantitative", "title": "Total Artist Followers"},
+        "y": {"field": "artist", "type": "nominal", "sort": "-x", "title": "Artist"},
+        "color": {"field": "genre", "type": "nominal"},
+        "tooltip": ["artist", "genre", "followers", "avg_pop", "song_count"]
+    }
+};
+
+
+const genres = ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Country', 'Electronic', 'Folk', 'Blues', 'R&B'];
+const controls = d3.select('#genre-controls');
+controls.append('select')
+    .attr('id', 'genre-select')
+    .attr('multiple', true)
+    .attr('size', 5)
+    .style('width', '300px')
+    .selectAll('option').data(genres).enter().append('option')
+    .attr('value', d => d)
+    .text(d => d)
+    .property('selected', true);
+
+const controls4 = d3.select('#genre-select-4');
+controls4.select('#genre-select-single')
+    .selectAll('option').data(genres).enter().append('option')
+    .attr('value', d => d)
+    .text(d => d);
+
+d3.json("filtered-550k-spotify-songs-audio-lyrics-and-genres.json").then(data => {
+    // Filter out any records before 1970, after 2020, or with 0 followers
+    const filteredByYear = data.filter(d => +d.year >= 1970 && +d.year <= 2020 && +d.total_artist_followers > 0);
+
+    // Sample 10k points for the scatter plot to avoid overcrowding
+    const sampleSize = 5000;
+    const sampled = filteredByYear.sort(() => 0.5 - Math.random()).slice(0, sampleSize);
+
+    spec.data.values = filteredByYear;
+    spec2.data.values = sampled;
+
+    // Aggregate artists per genre
+    const artistMap = new Map();
+    filteredByYear.forEach(song => {
+        if (!genres.includes(song.genre)) return;
+        let artist;
+        if (song.artists.startsWith('[')) {
+            // Remove brackets and quotes, split by comma, take first
+            artist = song.artists.replace(/[\[\]'"']/g, '').split(',')[0].trim();
+        } else {
+            artist = song.artists;
+        }
+        const key = `${artist}-${song.genre}`;
+        if (!artistMap.has(key)) {
+            artistMap.set(key, {
+                artist,
+                genre: song.genre,
+                followers: song.total_artist_followers,
+                popularities: [song.popularity],
+                song_count: 1
+            });
+        } else {
+            const entry = artistMap.get(key);
+            entry.popularities.push(song.popularity);
+            entry.song_count += 1;
+        }
+    });
+    const artistData = Array.from(artistMap.values()).map(d => ({
+        ...d,
+        avg_pop: d.popularities.reduce((a,b)=>a+b,0) / d.popularities.length
+    }));
+    // Rank top 10 per genre
+    const topArtists = [];
+    genres.forEach(genre => {
+        const genreArtists = artistData.filter(d => d.genre === genre).sort((a,b) => b.followers - a.followers).slice(0,10);
+        topArtists.push(...genreArtists);
+    });
+    spec4.data.values = topArtists;
+
+    let view2;
+    vegaEmbed('#music-chart-1', spec).then(result => {
+        const view = result.view;
+
+        d3.select('#genre-select').on('change', function() {
+            const selected = Array.from(this.selectedOptions).map(o => o.value);
+            // Keep only records of selected genres
+            const finalData = filteredByYear.filter(d => selected.includes(d.genre));
+            view.data('source', finalData).run();
+            // Sample for scatter plot
+            const finalSampled = finalData.sort(() => 0.5 - Math.random()).slice(0, sampleSize);
+            if (view2) view2.data('source2', finalSampled).run();
+        });
+    });
+
+    vegaEmbed('#music-chart-2', spec2).then(result2 => {
+        view2 = result2.view;
+    });
+
+    vegaEmbed('#music-chart-4', spec4).then(result4 => {
+        const view4 = result4.view;
+        d3.select('#genre-select-single').on('change', function() {
+            const selected = this.value;
+            const filtered = topArtists.filter(d => d.genre === selected);
+            view4.data('source4', filtered).run();
+        });
+        // Default to first genre
+        const firstGenre = genres[0];
+        d3.select('#genre-select-single').property('value', firstGenre);
+        const filtered = topArtists.filter(d => d.genre === firstGenre);
+        view4.data('source4', filtered).run();
+    });
+}).catch(error => {
+    console.error('Failed to load data:', error);
+    alert('Failed to load data. Please check the console for details.');
+});
+
+d3.json("DATAtetst.json").then(data3 => {
+    spec3.data.values = data3;
+    vegaEmbed('#music-chart-3', spec3);
+}).catch(error => {
+    console.error('Failed to load data for chart 3:', error);
+});
+</script>
+
+
+
 </body>
 </html>
