@@ -163,7 +163,8 @@ controls4.select('#genre-select-single')
     .attr('value', d => d)
     .text(d => d);
 
-d3.json("filtered-550k-spotify-songs-audio-lyrics-and-genres.json").then(data => {
+d3.json("https://github.com/andras-ubb/andras-ubb.github.io/blob/main/filtered-550k-spotify-songs-audio-lyrics-and-genres.json
+").then(data => {
     // Filter out any records before 1970, after 2020, or with 0 followers
     const filteredByYear = data.filter(d => +d.year >= 1970 && +d.year <= 2020 && +d.total_artist_followers > 0);
 
@@ -261,4 +262,5 @@ d3.json("DATAtetst.json").then(data3 => {
 
 </body>
 </html>
+
 
