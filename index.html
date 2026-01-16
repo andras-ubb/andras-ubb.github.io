@@ -163,7 +163,24 @@ controls4.select('#genre-select-single')
     .attr('value', d => d)
     .text(d => d);
 
-d3.json("https://raw.githubusercontent.com/andras-ubb/andras-ubb.github.io/main/filtered-550k-spotify-songs-audio-lyrics-and-genres.json").then(data => {
+const DATA_FILES = [
+  "data/data_000.json",
+  "data/data_001.json",
+  "data/data_002.json",
+  "data/data_003.json",
+  "data/data_004.json",
+  "data/data_005.json",
+  "data/data_006.json",
+  "data/data_007.json"
+];
+
+function loadAllData() {
+  return Promise.all(
+    DATA_FILES.map(f => fetch(f).then(r => r.json()))
+  ).then(chunks => chunks.flat());
+}
+
+loadAllData().then(data => {
     // Filter out any records before 1970, after 2020, or with 0 followers
     const filteredByYear = data.filter(d => +d.year >= 1970 && +d.year <= 2020 && +d.total_artist_followers > 0);
 
@@ -231,7 +248,13 @@ d3.json("https://raw.githubusercontent.com/andras-ubb/andras-ubb.github.io/main/
         view2 = result2.view;
     });
 
-    vegaEmbed('#music-chart-4', spec4).then(result4 => {
+    let view3;
+    vegaEmbed('#music-chart-3', spec3).then(result3 => {
+        view3 = result3.view;
+        view3.data('source3', filteredByYear).run();
+    });
+
+     vegaEmbed('#music-chart-4', spec4).then(result4 => {
         const view4 = result4.view;
         d3.select('#genre-select-single').on('change', function() {
             const selected = this.value;
@@ -244,23 +267,11 @@ d3.json("https://raw.githubusercontent.com/andras-ubb/andras-ubb.github.io/main/
         const filtered = topArtists.filter(d => d.genre === firstGenre);
         view4.data('source4', filtered).run();
     });
-}).catch(error => {
-    console.error('Failed to load data:', error);
-    alert('Failed to load data. Please check the console for details.');
-});
-
-d3.json("DATAtetst.json").then(data3 => {
-    spec3.data.values = data3;
-    vegaEmbed('#music-chart-3', spec3);
-}).catch(error => {
-    console.error('Failed to load data for chart 3:', error);
-});
+    
+    });
 </script>
 
 
 
 </body>
 </html>
-
-
-
