@@ -76,6 +76,18 @@
                 <div id="music-chart-5"></div>
             </section>
 
+            <section class="chart-section">
+                <h3>Műfaj Energia Profilok</h3>
+                <div>Audio jellemzők "ujjlenyomatai" minden műfajhoz - megmutatja az egyedi karakterisztikákat, amelyek meghatározzák a különböző zenei stílusokat</div>
+                <div>
+                    <strong>Táncolhatóság (Danceability)</strong> - Mennyire alkalmas egy szám táncolásra (0-1)<br>
+                    <strong>Energia (Energy)</strong> - Az intenzitás és erő észlelési mértéke (0-1)<br>
+                    <strong>Beszédesség (Speechiness)</strong> - Beszéd szavak jelenléte a számban (0-1)<br>
+                    <strong>Hangszereség (Instrumentalness)</strong> - Előrejelzi, hogy a szám vokál nélküli-e (0-1)
+                </div>
+                <div id="music-chart-6"></div>
+            </section>
+
         </section>
     </main>
 
@@ -193,6 +205,51 @@ const spec5 = {
             {"field": "decade", "type": "ordinal", "title": "Decade"},
             {"field": "avg_tempo", "type": "quantitative", "title": "Avg Tempo (BPM)", "format": ".1f"},
             {"field": "song_count", "type": "quantitative", "title": "Number of Songs"}
+        ]
+    },
+    "config": {
+        "view": {"stroke": "transparent", "fill": "transparent"}
+    }
+};
+
+const spec6 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 450,
+    "data": {"name": "source6", "values": []},
+    "transform": [
+        {
+            "fold": ["danceability", "energy", "speechiness", "instrumentalness"],
+            "as": ["feature", "value"]
+        }
+    ],
+    "mark": {"type": "line", "point": true, "strokeWidth": 3},
+    "encoding": {
+        "x": {
+            "field": "feature",
+            "type": "nominal",
+            "title": "Audio Jellemzők",
+            "sort": ["danceability", "energy", "speechiness", "instrumentalness"],
+            "axis": {"labelAngle": 0, "labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
+        },
+        "y": {
+            "field": "value",
+            "type": "quantitative",
+            "title": "Átlagos Érték (0-1)",
+            "scale": {"domain": [0, 1]},
+            "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "gridColor": "rgba(255,255,255,0.1)"}
+        },
+        "color": {
+            "field": "genre",
+            "type": "nominal",
+            "title": "Műfaj",
+            "scale": {"scheme": "category10"},
+            "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "orient": "right"}
+        },
+        "tooltip": [
+            {"field": "genre", "type": "nominal", "title": "Műfaj"},
+            {"field": "feature", "type": "nominal", "title": "Jellemző"},
+            {"field": "value", "type": "quantitative", "title": "Átlagos Érték", "format": ".3f"}
         ]
     },
     "config": {
@@ -359,6 +416,42 @@ loadAllData().then(data => {
     }).catch(error => {
         console.error('Failed to render chart 5:', error);
         document.getElementById('music-chart-5').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Failed to load chart 5. Please check the console for details.</p>';
+    });
+
+    // Prepare data for chart 6 - genre energy profiles
+    const chart6Data = [];
+    const features = ['danceability', 'energy', 'speechiness', 'instrumentalness'];
+    
+    genres.forEach(genre => {
+        const genreSongs = filteredByYear.filter(d => d.genre === genre);
+        if (genreSongs.length > 0) {
+            const avgFeatures = {};
+            avgFeatures.genre = genre;
+            
+            features.forEach(feature => {
+                const values = genreSongs.map(d => d[feature]).filter(v => v != null);
+                if (values.length > 0) {
+                    avgFeatures[feature] = values.reduce((a, b) => a + b, 0) / values.length;
+                } else {
+                    avgFeatures[feature] = 0;
+                }
+            });
+            
+            chart6Data.push(avgFeatures);
+        }
+    });
+    
+    vegaEmbed('#music-chart-6', spec6).then(result6 => {
+        const view6 = result6.view;
+        if (chart6Data.length > 0) {
+            view6.data('source6', chart6Data).run();
+        } else {
+            console.warn('No feature data available for chart 6');
+            document.getElementById('music-chart-6').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">No audio feature data available for chart.</p>';
+        }
+    }).catch(error => {
+        console.error('Failed to render chart 6:', error);
+        document.getElementById('music-chart-6').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Failed to load chart 6. Please check the console for details.</p>';
     });
 }).catch(error => {
     console.error('Failed to load data:', error);
