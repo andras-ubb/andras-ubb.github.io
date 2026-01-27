@@ -155,46 +155,34 @@ const spec4 = {
 const spec5 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": 875,
-    "height": 500,
+    "height": 350,
     "data": {"name": "source5", "values": []},
-    "transform": [
-        {
-            "calculate": "floor(datum.year / 10) * 10",
-            "as": "decade"
-        }
-    ],
-    "mark": {"type": "area", "interpolate": "monotone", "opacity": 0.6},
+    "mark": {"type": "area", "interpolate": "monotone", "opacity": 0.7, "stroke": {"value": "#fff"}, "strokeWidth": {"value": 1}},
     "encoding": {
         "x": {
             "field": "tempo",
             "type": "quantitative",
             "title": "Tempo (BPM)",
-            "scale": {"domain": [0, 200]}
+            "scale": {"domain": [0, 200]},
+            "axis": {"grid": true, "gridColor": "rgba(255,255,255,0.1)"}
         },
         "y": {
             "field": "density",
             "type": "quantitative",
-            "stack": "zero",
-            "title": null,
-            "axis": {"labels": false, "ticks": false, "grid": false}
-        },
-        "row": {
-            "field": "decade",
-            "type": "ordinal",
-            "title": "Decade",
-            "sort": "ascending",
-            "header": {"labelAngle": 0}
+            "title": "Density",
+            "axis": {"grid": true, "gridColor": "rgba(255,255,255,0.1)"}
         },
         "color": {
             "field": "decade",
-            "type": "ordinal",
-            "scale": {"scheme": "viridis"},
-            "legend": null
+            "type": "nominal",
+            "scale": {"scheme": "category10"},
+            "title": "Decade"
         }
     },
     "config": {
-        "view": {"stroke": "transparent"},
-        "axis": {"domainWidth": 0}
+        "view": {"stroke": "transparent", "fill": "transparent"},
+        "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "domainColor": "rgba(255,255,255,0.3)"},
+        "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
     }
 };
 
@@ -353,14 +341,14 @@ loadAllData().then(data => {
         
         decades.forEach(decade => {
             const decadeData = chart5Data.filter(d => Math.floor(d.year / 10) * 10 === decade);
-            const tempos = decadeData.map(d => d.tempo).filter(t => t != null);
+            const tempos = decadeData.map(d => d.tempo).filter(t => t != null && t > 0);
             
             if (tempos.length > 0) {
                 // Simple kernel density estimation
-                const bandwidth = 5;
-                const min = Math.max(0, Math.min(...tempos) - 20);
-                const max = Math.min(200, Math.max(...tempos) + 20);
-                const steps = 50;
+                const bandwidth = 8;
+                const min = 0;
+                const max = 200;
+                const steps = 100;
                 const stepSize = (max - min) / steps;
                 
                 for (let i = 0; i <= steps; i++) {
@@ -374,13 +362,21 @@ loadAllData().then(data => {
                     densityData.push({
                         tempo: x,
                         density: density,
-                        decade: decade
+                        decade: decade + "s"
                     });
                 }
             }
         });
         
-        view5.data('source5', densityData).run();
+        if (densityData.length > 0) {
+            view5.data('source5', densityData).run();
+        } else {
+            console.warn('No density data calculated for chart 5');
+            document.getElementById('music-chart-5').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">No tempo data available for chart.</p>';
+        }
+    }).catch(error => {
+        console.error('Failed to render chart 5:', error);
+        document.getElementById('music-chart-5').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Failed to load chart 5. Please check the console for details.</p>';
     });
 }).catch(error => {
     console.error('Failed to load data:', error);
