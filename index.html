@@ -157,32 +157,40 @@ const spec5 = {
     "width": 875,
     "height": 350,
     "data": {"name": "source5", "values": []},
-    "mark": {"type": "area", "interpolate": "monotone", "opacity": 0.7, "stroke": {"value": "#fff"}, "strokeWidth": {"value": 1}},
+    "transform": [
+        {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
+        {"bin": {"step": 10, "extent": [0, 200]}, "field": "tempo", "as": "tempo_bin"}
+    ],
+    "mark": {"type": "rect", "stroke": "rgba(255,255,255,0.1)", "strokeWidth": 0.5},
     "encoding": {
         "x": {
-            "field": "tempo",
-            "type": "quantitative",
+            "field": "tempo_bin",
+            "type": "ordinal",
             "title": "Tempo (BPM)",
-            "scale": {"domain": [0, 200]},
-            "axis": {"grid": true, "gridColor": "rgba(255,255,255,0.1)"}
+            "axis": {"labelAngle": 0, "labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
         },
         "y": {
-            "field": "density",
-            "type": "quantitative",
-            "title": "Density",
-            "axis": {"grid": true, "gridColor": "rgba(255,255,255,0.1)"}
+            "field": "decade",
+            "type": "ordinal",
+            "title": "Decade",
+            "sort": "ascending",
+            "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
         },
         "color": {
-            "field": "decade",
-            "type": "nominal",
-            "scale": {"scheme": "category10"},
-            "title": "Decade"
-        }
+            "aggregate": "count",
+            "type": "quantitative",
+            "title": "Number of Songs",
+            "scale": {"scheme": "yelloworangered"},
+            "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
+        },
+        "tooltip": [
+            {"field": "decade", "type": "ordinal", "title": "Decade"},
+            {"field": "tempo_bin", "type": "ordinal", "title": "Tempo Range"},
+            {"aggregate": "count", "type": "quantitative", "title": "Songs Count"}
+        ]
     },
     "config": {
-        "view": {"stroke": "transparent", "fill": "transparent"},
-        "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "domainColor": "rgba(255,255,255,0.3)"},
-        "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
+        "view": {"stroke": "transparent", "fill": "transparent"}
     }
 };
 
@@ -335,43 +343,11 @@ loadAllData().then(data => {
 
     vegaEmbed('#music-chart-5', spec5).then(result5 => {
         const view5 = result5.view;
-        // Calculate density for each decade separately
-        const decades = [...new Set(chart5Data.map(d => Math.floor(d.year / 10) * 10))].sort((a,b) => a - b);
-        const densityData = [];
-        
-        decades.forEach(decade => {
-            const decadeData = chart5Data.filter(d => Math.floor(d.year / 10) * 10 === decade);
-            const tempos = decadeData.map(d => d.tempo).filter(t => t != null && t > 0);
-            
-            if (tempos.length > 0) {
-                // Simple kernel density estimation
-                const bandwidth = 8;
-                const min = 0;
-                const max = 200;
-                const steps = 100;
-                const stepSize = (max - min) / steps;
-                
-                for (let i = 0; i <= steps; i++) {
-                    const x = min + i * stepSize;
-                    let density = 0;
-                    tempos.forEach(t => {
-                        const u = (x - t) / bandwidth;
-                        density += Math.exp(-0.5 * u * u) / (bandwidth * Math.sqrt(2 * Math.PI));
-                    });
-                    density = density / tempos.length;
-                    densityData.push({
-                        tempo: x,
-                        density: density,
-                        decade: decade + "s"
-                    });
-                }
-            }
-        });
-        
-        if (densityData.length > 0) {
-            view5.data('source5', densityData).run();
+        // Pass raw data - the spec transforms will handle binning
+        if (chart5Data.length > 0) {
+            view5.data('source5', chart5Data).run();
         } else {
-            console.warn('No density data calculated for chart 5');
+            console.warn('No tempo data available for chart 5');
             document.getElementById('music-chart-5').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">No tempo data available for chart.</p>';
         }
     }).catch(error => {
