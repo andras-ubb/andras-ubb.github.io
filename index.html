@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </head>
 
 <body>
@@ -85,7 +86,7 @@
                     <strong>Beszédesség (Speechiness)</strong> - Beszéd szavak jelenléte a számban (0-1)<br>
                     <strong>Hangszereség (Instrumentalness)</strong> - Előrejelzi, hogy a szám vokál nélküli-e (0-1)
                 </div>
-                <div id="music-chart-6"></div>
+                <canvas id="music-chart-6"></canvas>
             </section>
 
         </section>
@@ -132,23 +133,50 @@ const spec2 = {
 };
 
 const spec3 = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 1000,
-    "height": 750,
-    "data": {"name": "source3", "values": []},
-    "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
-    "columns": 3,
-    "spec": {
-        "width": 300,
-        "height": 350,
-        "mark": {"type": "boxplot", "outliers": false},
-        "encoding": {
-            "x": {"field": "genre", "type": "nominal"},
-            "y": {"field": {"repeat": "repeat"}, "type": "quantitative"},
-            "color": {"field": "genre", "type": "nominal"}
-        }
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "autosize": {
+    "type": "pad",
+    "contains": "padding"
+  },
+  "bounds": "full",
+  "padding": { "top": 40, "right": 80, "bottom": 80, "left": 60 },
+
+  "data": { "name": "source3", "values": [] },
+
+  "repeat": [
+    "danceability",
+    "energy",
+    "tempo",
+    "loudness",
+    "speechiness",
+    "instrumentalness"
+  ],
+  "columns": 3,
+
+  "spec": {
+    "width": 280,
+    "height": 300,
+    "mark": { "type": "boxplot", "outliers": false },
+    "encoding": {
+      "x": {
+        "field": "genre",
+        "type": "nominal",
+        "axis": { "labelAngle": -45 }
+      },
+      "y": {
+        "field": { "repeat": "repeat" },
+        "type": "quantitative"
+      },
+      "color": {
+        "field": "genre",
+        "type": "nominal",
+        "legend": null
+      }
     }
+  }
 };
+
 
 const spec4 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -166,6 +194,12 @@ const spec4 = {
 
 const spec5 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+      "autosize": {
+    "type": "pad",
+    "contains": "padding"
+  },
+
     "width": 875,
     "height": 350,
     "data": {"name": "source5", "values": []},
@@ -212,50 +246,7 @@ const spec5 = {
     }
 };
 
-const spec6 = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 800,
-    "height": 450,
-    "data": {"name": "source6", "values": []},
-    "transform": [
-        {
-            "fold": ["danceability", "energy", "speechiness", "instrumentalness"],
-            "as": ["feature", "value"]
-        }
-    ],
-    "mark": {"type": "line", "point": true, "strokeWidth": 3},
-    "encoding": {
-        "x": {
-            "field": "feature",
-            "type": "nominal",
-            "title": "Audio Jellemzők",
-            "sort": ["danceability", "energy", "speechiness", "instrumentalness"],
-            "axis": {"labelAngle": 0, "labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
-        },
-        "y": {
-            "field": "value",
-            "type": "quantitative",
-            "title": "Átlagos Érték (0-1)",
-            "scale": {"domain": [0, 1]},
-            "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "gridColor": "rgba(255,255,255,0.1)"}
-        },
-        "color": {
-            "field": "genre",
-            "type": "nominal",
-            "title": "Műfaj",
-            "scale": {"scheme": "category10"},
-            "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "orient": "right"}
-        },
-        "tooltip": [
-            {"field": "genre", "type": "nominal", "title": "Műfaj"},
-            {"field": "feature", "type": "nominal", "title": "Jellemző"},
-            {"field": "value", "type": "quantitative", "title": "Átlagos Érték", "format": ".3f"}
-        ]
-    },
-    "config": {
-        "view": {"stroke": "transparent", "fill": "transparent"}
-    }
-};
+// Chart 6 will use Chart.js for radar chart - no spec needed
 
 
 const genres = ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Country', 'Electronic', 'Folk', 'Blues', 'R&B'];
@@ -441,18 +432,97 @@ loadAllData().then(data => {
         }
     });
     
-    vegaEmbed('#music-chart-6', spec6).then(result6 => {
-        const view6 = result6.view;
-        if (chart6Data.length > 0) {
-            view6.data('source6', chart6Data).run();
-        } else {
-            console.warn('No feature data available for chart 6');
-            document.getElementById('music-chart-6').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">No audio feature data available for chart.</p>';
-        }
-    }).catch(error => {
-        console.error('Failed to render chart 6:', error);
-        document.getElementById('music-chart-6').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Failed to load chart 6. Please check the console for details.</p>';
-    });
+    // Create Chart.js Radar Chart for chart 6
+    if (chart6Data.length > 0) {
+        const ctx = document.getElementById('music-chart-6').getContext('2d');
+        const featureLabels = ['Táncolhatóság', 'Energia', 'Beszédesség', 'Hangszereség'];
+        const featureKeys = ['danceability', 'energy', 'speechiness', 'instrumentalness'];
+        
+        // Colors for each genre
+        const colors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(199, 199, 199, 0.2)',
+            'rgba(83, 102, 255, 0.2)',
+            'rgba(255, 99, 255, 0.2)',
+            'rgba(99, 255, 132, 0.2)'
+        ];
+        const borderColors = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)',
+            'rgba(83, 102, 255, 1)',
+            'rgba(255, 99, 255, 1)',
+            'rgba(99, 255, 132, 1)'
+        ];
+        
+        const datasets = chart6Data.map((genreData, index) => ({
+            label: genreData.genre,
+            data: featureKeys.map(key => genreData[key]),
+            backgroundColor: colors[index % colors.length],
+            borderColor: borderColors[index % borderColors.length],
+            borderWidth: 2,
+            pointBackgroundColor: borderColors[index % borderColors.length],
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: borderColors[index % borderColors.length]
+        }));
+        
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: featureLabels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#e0e0e0',
+                            font: { size: 12 }
+                        }
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        },
+                        pointLabels: {
+                            color: '#e0e0e0',
+                            font: { size: 14, weight: 'bold' }
+                        },
+                        ticks: {
+                            color: '#e0e0e0',
+                            backdropColor: 'transparent'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 1
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn('No feature data available for chart 6');
+        document.getElementById('music-chart-6').outerHTML = '<p style="color: #ff6b6b; padding: 20px;">No audio feature data available for chart.</p>';
+    }
 }).catch(error => {
     console.error('Failed to load data:', error);
     alert('Failed to load data. Please check the console for details and ensure data files exist in the data/ directory.');
