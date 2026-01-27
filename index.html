@@ -155,7 +155,7 @@ const spec4 = {
 const spec5 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": 875,
-    "height": 400,
+    "height": 500,
     "data": {"name": "source5", "values": []},
     "transform": [
         {
@@ -163,15 +163,38 @@ const spec5 = {
             "as": "decade"
         }
     ],
-    "mark": "violin",
+    "mark": {"type": "area", "interpolate": "monotone", "opacity": 0.6},
     "encoding": {
-        "x": {"field": "decade", "type": "ordinal", "title": "Decade"},
-        "y": {"field": "tempo", "type": "quantitative", "title": "Tempo (BPM)"},
-        "color": {"field": "decade", "type": "ordinal"}
+        "x": {
+            "field": "tempo",
+            "type": "quantitative",
+            "title": "Tempo (BPM)",
+            "scale": {"domain": [0, 200]}
+        },
+        "y": {
+            "field": "density",
+            "type": "quantitative",
+            "stack": "zero",
+            "title": null,
+            "axis": {"labels": false, "ticks": false, "grid": false}
+        },
+        "row": {
+            "field": "decade",
+            "type": "ordinal",
+            "title": "Decade",
+            "sort": "ascending",
+            "header": {"labelAngle": 0}
+        },
+        "color": {
+            "field": "decade",
+            "type": "ordinal",
+            "scale": {"scheme": "viridis"},
+            "legend": null
+        }
     },
-    "autosize": {
-        "type": "pad",
-        "contains": "padding"
+    "config": {
+        "view": {"stroke": "transparent"},
+        "axis": {"domainWidth": 0}
     }
 };
 
@@ -322,7 +345,43 @@ loadAllData().then(data => {
         view4.data('source4', filtered).run();
     });
 
-    vegaEmbed('#music-chart-5', spec5);
+    vegaEmbed('#music-chart-5', spec5).then(result5 => {
+        const view5 = result5.view;
+        // Calculate density for each decade separately
+        const decades = [...new Set(chart5Data.map(d => Math.floor(d.year / 10) * 10))].sort((a,b) => a - b);
+        const densityData = [];
+        
+        decades.forEach(decade => {
+            const decadeData = chart5Data.filter(d => Math.floor(d.year / 10) * 10 === decade);
+            const tempos = decadeData.map(d => d.tempo).filter(t => t != null);
+            
+            if (tempos.length > 0) {
+                // Simple kernel density estimation
+                const bandwidth = 5;
+                const min = Math.max(0, Math.min(...tempos) - 20);
+                const max = Math.min(200, Math.max(...tempos) + 20);
+                const steps = 50;
+                const stepSize = (max - min) / steps;
+                
+                for (let i = 0; i <= steps; i++) {
+                    const x = min + i * stepSize;
+                    let density = 0;
+                    tempos.forEach(t => {
+                        const u = (x - t) / bandwidth;
+                        density += Math.exp(-0.5 * u * u) / (bandwidth * Math.sqrt(2 * Math.PI));
+                    });
+                    density = density / tempos.length;
+                    densityData.push({
+                        tempo: x,
+                        density: density,
+                        decade: decade
+                    });
+                }
+            }
+        });
+        
+        view5.data('source5', densityData).run();
+    });
 }).catch(error => {
     console.error('Failed to load data:', error);
     alert('Failed to load data. Please check the console for details and ensure data files exist in the data/ directory.');
