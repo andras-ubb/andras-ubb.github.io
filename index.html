@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Data Charts</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
 
     <!-- Load libraries first -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -114,22 +114,48 @@ const spec2 = {
 };
 
 const spec3 = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 1000,
-    "height": 750,
-    "data": {"name": "source3", "values": []},
-    "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
-    "columns": 3,
-    "spec": {
-        "width": 300,
-        "height": 350,
-        "mark": {"type": "boxplot", "outliers": false},
-        "encoding": {
-            "x": {"field": "genre", "type": "nominal"},
-            "y": {"field": {"repeat": "repeat"}, "type": "quantitative"},
-            "color": {"field": "genre", "type": "nominal"}
-        }
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "autosize": {
+    "type": "pad",
+    "contains": "padding"
+  },
+  "bounds": "full",
+  "padding": { "top": 40, "right": 80, "bottom": 80, "left": 60 },
+
+  "data": { "name": "source3", "values": [] },
+
+  "repeat": [
+    "danceability",
+    "energy",
+    "tempo",
+    "loudness",
+    "speechiness",
+    "instrumentalness"
+  ],
+  "columns": 3,
+
+  "spec": {
+    "width": 280,
+    "height": 300,
+    "mark": { "type": "boxplot", "outliers": false },
+    "encoding": {
+      "x": {
+        "field": "genre",
+        "type": "nominal",
+        "axis": { "labelAngle": -45 }
+      },
+      "y": {
+        "field": { "repeat": "repeat" },
+        "type": "quantitative"
+      },
+      "color": {
+        "field": "genre",
+        "type": "nominal",
+        "legend": null
+      }
     }
+  }
 };
 
 const spec4 = {
