@@ -147,14 +147,22 @@ main {
     padding: 5px;
 }
 
-#genre-controls label {
+#genre-controls label,
+#genre-select-4 label {
     color: #ff006e;
     font-weight: bold;
     margin-right: 10px;
 }
 
-#music-chart-1, #music-chart-2 {
-    height: 400px;
+#genre-select-single {
+    background: rgba(0, 0, 0, 0.2);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#music-chart-1, #music-chart-2, #music-chart-4 {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
@@ -162,6 +170,24 @@ main {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#music-chart-3 {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#music-chart-1, #music-chart-2, #music-chart-4 {
+    height: 400px;
+}
+
+#music-chart-3 {
+    min-height: 700px;
 }
 
 footer {

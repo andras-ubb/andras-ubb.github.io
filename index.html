@@ -115,14 +115,14 @@ const spec2 = {
 
 const spec3 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "width": 875,
-    "height": 650,
+    "width": 1000,
+    "height": 750,
     "data": {"name": "source3", "values": []},
     "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
     "columns": 3,
     "spec": {
-        "width": 250,
-        "height": 300,
+        "width": 300,
+        "height": 350,
         "mark": {"type": "boxplot", "outliers": false},
         "encoding": {
             "x": {"field": "genre", "type": "nominal"},
