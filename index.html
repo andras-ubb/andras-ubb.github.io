@@ -159,34 +159,40 @@ const spec5 = {
     "data": {"name": "source5", "values": []},
     "transform": [
         {"calculate": "floor(datum.year / 10) * 10", "as": "decade"},
-        {"bin": {"step": 10, "extent": [0, 200]}, "field": "tempo", "as": "tempo_bin"}
+        {
+            "aggregate": [
+                {"op": "mean", "field": "tempo", "as": "avg_tempo"},
+                {"op": "count", "as": "song_count"}
+            ],
+            "groupby": ["decade"]
+        }
     ],
-    "mark": {"type": "rect", "stroke": "rgba(255,255,255,0.1)", "strokeWidth": 0.5},
+    "mark": {"type": "bar", "cornerRadiusEnd": 5},
     "encoding": {
         "x": {
-            "field": "tempo_bin",
-            "type": "ordinal",
-            "title": "Tempo (BPM)",
-            "axis": {"labelAngle": 0, "labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
-        },
-        "y": {
             "field": "decade",
             "type": "ordinal",
             "title": "Decade",
-            "sort": "ascending",
-            "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
+            "axis": {"labelAngle": 0, "labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
+        },
+        "y": {
+            "field": "avg_tempo",
+            "type": "quantitative",
+            "title": "Average Tempo (BPM)",
+            "scale": {"domain": [0, 200]},
+            "axis": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0", "gridColor": "rgba(255,255,255,0.1)"}
         },
         "color": {
-            "aggregate": "count",
+            "field": "avg_tempo",
             "type": "quantitative",
-            "title": "Number of Songs",
-            "scale": {"scheme": "yelloworangered"},
+            "title": "Tempo (BPM)",
+            "scale": {"scheme": "viridis", "domain": [80, 140]},
             "legend": {"labelColor": "#e0e0e0", "titleColor": "#e0e0e0"}
         },
         "tooltip": [
             {"field": "decade", "type": "ordinal", "title": "Decade"},
-            {"field": "tempo_bin", "type": "ordinal", "title": "Tempo Range"},
-            {"aggregate": "count", "type": "quantitative", "title": "Songs Count"}
+            {"field": "avg_tempo", "type": "quantitative", "title": "Avg Tempo (BPM)", "format": ".1f"},
+            {"field": "song_count", "type": "quantitative", "title": "Number of Songs"}
         ]
     },
     "config": {
