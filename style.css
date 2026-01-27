@@ -162,7 +162,7 @@ main {
     padding: 5px;
 }
 
-#music-chart-1, #music-chart-2, #music-chart-4 {
+#music-chart-1, #music-chart-2, #music-chart-4, #music-chart-5 {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
@@ -182,7 +182,7 @@ main {
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-#music-chart-1, #music-chart-2, #music-chart-4 {
+#music-chart-1, #music-chart-2, #music-chart-4, #music-chart-5 {
     height: 400px;
 }
 

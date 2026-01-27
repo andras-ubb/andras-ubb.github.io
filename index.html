@@ -70,6 +70,12 @@
                 <div id="music-chart-4"></div>
             </section>
 
+            <section class="chart-section">
+                <h3>Tempo Distribution by Decade</h3>
+                <div>A tempo eloszlása évtizedek szerint - mutatja a zenei sebesség evolúcióját az évtizedeken keresztül</div>
+                <div id="music-chart-5"></div>
+            </section>
+
         </section>
     </main>
 
@@ -172,6 +178,29 @@ const spec4 = {
     }
 };
 
+const spec5 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 875,
+    "height": 400,
+    "data": {"name": "source5", "values": []},
+    "transform": [
+        {
+            "calculate": "floor(datum.year / 10) * 10",
+            "as": "decade"
+        }
+    ],
+    "mark": {"type": "boxplot", "extent": "min-max"},
+    "encoding": {
+        "x": {"field": "decade", "type": "ordinal", "title": "Decade"},
+        "y": {"field": "tempo", "type": "quantitative", "title": "Tempo (BPM)"},
+        "color": {"field": "decade", "type": "ordinal"}
+    },
+    "autosize": {
+        "type": "pad",
+        "contains": "padding"
+    }
+};
+
 
 const genres = ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Country', 'Electronic', 'Folk', 'Blues', 'R&B'];
 const controls = d3.select('#genre-controls');
@@ -262,6 +291,10 @@ loadAllData().then(data => {
         topArtists.push(...genreArtists);
     });
     spec4.data.values = topArtists;
+
+    // Prepare data for chart 5 - tempo by decade
+    const chart5Data = filteredByYear.filter(d => d.tempo != null && genres.includes(d.genre));
+    spec5.data.values = chart5Data;
 
     let view2;
     vegaEmbed('#music-chart-1', spec).then(result => {
