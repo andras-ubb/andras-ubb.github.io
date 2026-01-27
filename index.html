@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Data Charts</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
 
     <!-- Load libraries first -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -115,6 +115,8 @@ const spec2 = {
 
 const spec3 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 875,
+    "height": 650,
     "data": {"name": "source3", "values": []},
     "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
     "columns": 3,
@@ -183,6 +185,12 @@ function loadAllData() {
 loadAllData().then(data => {
     // Filter out any records before 1970, after 2020, or with 0 followers
     const filteredByYear = data.filter(d => +d.year >= 1970 && +d.year <= 2020 && +d.total_artist_followers > 0);
+    
+    if (filteredByYear.length === 0) {
+        console.error('No data after filtering');
+        alert('No data available after filtering. Please check your data files.');
+        return;
+    }
 
     // Sample 10k points for the scatter plot to avoid overcrowding
     const sampleSize = 5000;
@@ -249,9 +257,22 @@ loadAllData().then(data => {
     });
 
     let view3;
+    // Filter data for chart 3 to ensure it has all required fields and only predefined genres
+    const chart3Data = filteredByYear.filter(d =>
+        genres.includes(d.genre) &&
+        d.danceability != null &&
+        d.energy != null &&
+        d.tempo != null &&
+        d.loudness != null &&
+        d.speechiness != null &&
+        d.instrumentalness != null
+    );
     vegaEmbed('#music-chart-3', spec3).then(result3 => {
         view3 = result3.view;
-        view3.data('source3', filteredByYear).run();
+        view3.data('source3', chart3Data).run();
+    }).catch(error => {
+        console.error('Failed to render chart 3:', error);
+        document.getElementById('music-chart-3').innerHTML = '<p style="color: #ff6b6b; padding: 20px;">Failed to load chart 3. Please check the console for details.</p>';
     });
 
      vegaEmbed('#music-chart-4', spec4).then(result4 => {
@@ -267,8 +288,10 @@ loadAllData().then(data => {
         const filtered = topArtists.filter(d => d.genre === firstGenre);
         view4.data('source4', filtered).run();
     });
-    
-    });
+}).catch(error => {
+    console.error('Failed to load data:', error);
+    alert('Failed to load data. Please check the console for details and ensure data files exist in the data/ directory.');
+});
 </script>
 
 
