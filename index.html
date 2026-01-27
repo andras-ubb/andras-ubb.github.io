@@ -120,48 +120,22 @@ const spec2 = {
 };
 
 const spec3 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-
-  "autosize": {
-    "type": "pad",
-    "contains": "padding"
-  },
-  "bounds": "full",
-  "padding": { "top": 40, "right": 80, "bottom": 80, "left": 60 },
-
-  "data": { "name": "source3", "values": [] },
-
-  "repeat": [
-    "danceability",
-    "energy",
-    "tempo",
-    "loudness",
-    "speechiness",
-    "instrumentalness"
-  ],
-  "columns": 3,
-
-  "spec": {
-    "width": 280,
-    "height": 300,
-    "mark": { "type": "boxplot", "outliers": false },
-    "encoding": {
-      "x": {
-        "field": "genre",
-        "type": "nominal",
-        "axis": { "labelAngle": -45 }
-      },
-      "y": {
-        "field": { "repeat": "repeat" },
-        "type": "quantitative"
-      },
-      "color": {
-        "field": "genre",
-        "type": "nominal",
-        "legend": null
-      }
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 1000,
+    "height": 750,
+    "data": {"name": "source3", "values": []},
+    "repeat": ["danceability", "energy", "tempo", "loudness", "speechiness", "instrumentalness"],
+    "columns": 3,
+    "spec": {
+        "width": 300,
+        "height": 350,
+        "mark": {"type": "boxplot", "outliers": false},
+        "encoding": {
+            "x": {"field": "genre", "type": "nominal"},
+            "y": {"field": {"repeat": "repeat"}, "type": "quantitative"},
+            "color": {"field": "genre", "type": "nominal"}
+        }
     }
-  }
 };
 
 const spec4 = {
@@ -189,7 +163,7 @@ const spec5 = {
             "as": "decade"
         }
     ],
-    "mark": {"type": "boxplot", "extent": "min-max"},
+    "mark": "violin",
     "encoding": {
         "x": {"field": "decade", "type": "ordinal", "title": "Decade"},
         "y": {"field": "tempo", "type": "quantitative", "title": "Tempo (BPM)"},
@@ -347,6 +321,8 @@ loadAllData().then(data => {
         const filtered = topArtists.filter(d => d.genre === firstGenre);
         view4.data('source4', filtered).run();
     });
+
+    vegaEmbed('#music-chart-5', spec5);
 }).catch(error => {
     console.error('Failed to load data:', error);
     alert('Failed to load data. Please check the console for details and ensure data files exist in the data/ directory.');
