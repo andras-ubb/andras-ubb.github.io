@@ -86,7 +86,9 @@
                     <strong>Beszédesség (Speechiness)</strong> - Beszéd szavak jelenléte a számban (0-1)<br>
                     <strong>Hangszereség (Instrumentalness)</strong> - Előrejelzi, hogy a szám vokál nélküli-e (0-1)
                 </div>
-                <canvas id="music-chart-6"></canvas>
+                <div class="chart6-wrapper">
+                    <canvas id="music-chart-6" width="800" height="500"></canvas>
+                </div>
             </section>
 
         </section>
@@ -134,6 +136,11 @@ const spec2 = {
 
 const spec3 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+  "autosize": {
+    "type": "pad",
+    "contains": "padding"
+  },
   "bounds": "full",
   "padding": { "top": 40, "right": 80, "bottom": 80, "left": 60 },
 
@@ -189,12 +196,6 @@ const spec4 = {
 
 const spec5 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-
-      "autosize": {
-    "type": "pad",
-    "contains": "padding"
-  },
-
     "width": 875,
     "height": 350,
     "data": {"name": "source5", "values": []},
@@ -478,8 +479,9 @@ loadAllData().then(data => {
                 datasets: datasets
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
+                animation: false,
                 plugins: {
                     legend: {
                         position: 'right',
