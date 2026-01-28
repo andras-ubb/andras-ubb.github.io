@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Data Charts</title>
+    <title>Zenei Adat Vizualizáció</title>
     <link rel="stylesheet" href="style.css">
 
     <!-- Load libraries first -->
@@ -16,28 +16,28 @@
 
 <body>
     <header>
-        <h1>Welcome to Music Data Charts</h1>
+        <h1>Üdvözöljük a Zenei Adat Vizualizáció oldalon</h1>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Charts</a>
-            <a href="#">Genres</a>
-            <a href="#">Artists</a>
+            <a href="#">Kezdőlap</a>
+            <a href="#">Diagramok</a>
+            <a href="#">Műfajok</a>
+            <a href="#">Előadók</a>
         </nav>
     </header>
 
     <main>
         <section class="content">
-            <h2>About This Website</h2>
-            <p>This site is dedicated to visualizing music data through beautiful charts. Explore trends in genres, artists, and more!</p>
+            <h2>Az Oldalról</h2>
+            <p>Ez az oldal a zenei adatok vizualizációival rendelkezik.</p>
         </section>
 
         <section class="charts">
-            <h2>Music Data Charts</h2>
+            <h2>Zenei Adat Diagramok</h2>
 
             <section class="chart-section">
-                <h3>Genre Popularity Over The Years (1970-2020)</h3>
+                <h3>Műfajok Népszerűsége az Évek Során (1970-2020)</h3>
                 <div id="genre-controls" style="margin-bottom: 10px;">
-                    <label for="genre-select">Select Genres:</label>
+                    <label for="genre-select">Műfajok Kiválasztása:</label>
                 </div>
                 <div id="music-chart-1"></div>
 
@@ -50,36 +50,36 @@
             </section>
 
             <section class="chart-section">
-                <h3>Explore Song Characteristics Distribution</h3>
+                <h3>Dal Jellemzők Eloszlása</h3>
                 <div id="music-chart-3"></div>
                 <div>
-                    <strong>Danceability</strong> - A szám táncolhatóságának mértéke<br>
-                    <strong>Energy</strong> - Az intenzitás percepciója<br>
+                    <strong>Táncolhatóság</strong> - A szám táncolhatóságának mértéke<br>
+                    <strong>Energia</strong> - Az intenzitás észlelése<br>
                     <strong>Tempo</strong> - Ütem per perc<br>
-                    <strong>Loudness</strong> - A szám általános hangerőssége decibelben<br>
-                    <strong>Speechiness</strong> - Beszélt szavak jelenléte a számban<br>
-                    <strong>Instrumentalness</strong> - Előrejelzi, hogy a számban nincs vokál
+                    <strong>Hangerősség</strong> - A szám általános hangerőssége decibelben<br>
+                    <strong>Beszédesség</strong> - Beszélt szavak jelenléte a számban<br>
+                    <strong>Hangszereség</strong> - Előrejelzi, hogy a számban nincs vokál
                 </div>
             </section>
 
             <section class="chart-section">
-                <h3>Top 10 Artists per Genre by Followers</h3>
+                <h3>Top 10 Eloadő Műfajonként Követők Száma Szerint</h3>
                 <div id="genre-select-4" style="margin-bottom: 10px;">
-                    <label for="genre-select-single">Select Genre:</label>
+                    <label for="genre-select-single">Műfaj Kiválasztása:</label>
                     <select id="genre-select-single"></select>
                 </div>
                 <div id="music-chart-4"></div>
             </section>
 
             <section class="chart-section">
-                <h3>Tempo Distribution by Decade</h3>
-                <div>A tempo eloszlása évtizedek szerint - mutatja a zenei sebesség evolúcióját az évtizedeken keresztül</div>
+                <h3>Tempó Eloszlás Évtizedenként</h3>
+                <div>A tempó eloszlása évtizedek szerint - mutatja a zenei sebesség evolúcióját az évtizedeken keresztül</div>
                 <div id="music-chart-5"></div>
             </section>
 
             <section class="chart-section">
-                <h3>Műfaj Energia Profilok</h3>
-                <div>Audio jellemzők "ujjlenyomatai" minden műfajhoz - megmutatja az egyedi karakterisztikákat, amelyek meghatározzák a különböző zenei stílusokat</div>
+                <h3>Műfaj Profilok Egyben</h3>
+                <div>Audio jellemzők minden műfajhoz - megmutatja az egyedi karakterisztikákat, amelyek meghatározzák a különböző zenei stílusokat</div>
                 <div>
                     <strong>Táncolhatóság (Danceability)</strong> - Mennyire alkalmas egy szám táncolásra (0-1)<br>
                     <strong>Energia (Energy)</strong> - Az intenzitás és erő észlelési mértéke (0-1)<br>
@@ -95,7 +95,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Music Data Charts</p>
+        <p>&copy; 2026 Zenei Adat Vizualizáció</p>
     </footer>
 
     <script>
@@ -114,9 +114,9 @@ const spec = {
     ],
     "mark": "line",
     "encoding": {
-        "x": {"field": "year", "type": "quantitative", "scale": {"domain": [1970, 2020]}},
-        "y": {"field": "mean_popularity", "type": "quantitative"},
-        "color": {"field": "genre", "type": "nominal"}
+        "x": {"field": "year", "type": "quantitative", "title": "Év", "scale": {"domain": [1970, 2020]}},
+        "y": {"field": "mean_popularity", "type": "quantitative", "title": "Átlagos Népszerűség"},
+        "color": {"field": "genre", "type": "nominal", "title": "Műfaj"}
     }
 };
 
@@ -127,10 +127,15 @@ const spec2 = {
     "data": {"name": "source2", "values": []},
     "mark": {"type": "point", "opacity": 0.5},
     "encoding": {
-        "x": {"field": "total_artist_followers", "type": "quantitative", "scale": {"type": "log"}},
-        "y": {"field": "popularity", "type": "quantitative"},
-        "color": {"field": "genre", "type": "nominal"},
-        "tooltip": ["name", "artists", "popularity", "total_artist_followers"]
+        "x": {"field": "total_artist_followers", "type": "quantitative", "title": "Előadói Követők", "scale": {"type": "log"}},
+        "y": {"field": "popularity", "type": "quantitative", "title": "Népszerűség"},
+        "color": {"field": "genre", "type": "nominal", "title": "Műfaj"},
+        "tooltip": [
+            {"field": "name", "type": "nominal", "title": "Dal"},
+            {"field": "artists", "type": "nominal", "title": "Előadó"},
+            {"field": "popularity", "type": "quantitative", "title": "Népszerűség"},
+            {"field": "total_artist_followers", "type": "quantitative", "title": "Követők"}
+        ]
     }
 };
 
