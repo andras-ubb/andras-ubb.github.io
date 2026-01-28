@@ -141,7 +141,7 @@ const spec3 = {
     "contains": "padding"
   },
   "bounds": "full",
-  "padding": { "top": 80, "right": 90, "bottom": 80, "left": 60 },
+  "padding": { "top": 40, "right": 80, "bottom": 80, "left": 60 },
 
   "data": { "name": "source3", "values": [] },
 
@@ -347,9 +347,7 @@ loadAllData().then(data => {
             // Keep only records of selected genres
             const finalData = filteredByYear.filter(d => selected.includes(d.genre));
             view.data('source', finalData).run();
-            // Sample for scatter plot
-            const finalSampled = finalData.sort(() => 0.5 - Math.random()).slice(0, sampleSize);
-            if (view2) view2.data('source2', finalSampled).run();
+            // Chart 2 is not affected by genre selection
         });
     });
 
